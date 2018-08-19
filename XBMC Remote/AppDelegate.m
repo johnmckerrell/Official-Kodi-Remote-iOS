@@ -3003,6 +3003,11 @@ NSMutableArray *hostRightMenuItems;
                              [NSNumber numberWithFloat:itemMovieWidthIpad], @"height", nil], @"ipad",
                             @"60", @"separatorInset",
                             nil], @"itemSizes",
+                           [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                            @"ascending",@"order",
+                            [NSNumber numberWithBool:FALSE],@"ignorearticle",
+                            [[NSArray alloc] initWithObjects: @"label", @"plot", nil], @"methods",
+                            nil],@"sort",
                            nil],
                           
                           [NSMutableArray arrayWithObjects:

@@ -5044,10 +5044,28 @@ NSIndexPath *selected;
         episodesView = FALSE;
     }
     BOOL sortAscending = [sortAscDesc isEqualToString:@"descending"] ? NO : YES;
+    NSMutableArray *sortMethods = [[NSMutableArray alloc] initWithCapacity:3];
+    if (sortMethodName) {
+        [sortMethods addObject:sortMethodName];
+    }
+    NSString *localSortMethodName = sortMethodName;
+    NSDictionary *sortOptions = parameters[@"sort"];
+    if (sortOptions && [sortOptions isKindOfClass:[NSDictionary class]]) {
+        sortAscending = [sortOptions[@"order"] isEqualToString:@"descending"] ? NO : YES;
+        [sortMethods removeAllObjects];
+        if (sortOptions[@"method"]) {
+            [sortMethods addObject:sortOptions[@"method"]];
+        } else if ([sortOptions[@"methods"] isKindOfClass:[NSArray class]]) {
+            [sortMethods addObjectsFromArray:sortOptions[@"methods"]];
+        }
+    }
     if ([self.detailItem enableSection] && [copyRichResults count]>SECTIONS_START_AT && (sortMethodIndex == -1 || [sortMethodName isEqualToString:@"label"])){
-        if ([sortAscDesc isEqualToString:@"descending"]) {
-            NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"label" ascending:sortAscending];
-            NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        if (sortMethods.count > 0) {
+            NSMutableArray *sortDescriptors = [[NSMutableArray alloc] initWithCapacity:sortMethods.count];
+            for (NSString *method in sortMethods) {
+                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:method ascending:sortAscending];
+                [sortDescriptors addObject:sortDescriptor];
+            }
             copyRichResults = [copyRichResults sortedArrayUsingDescriptors:sortDescriptors];
         }
         [self.sections setValue:[[NSMutableArray alloc] init] forKey:UITableViewIndexSearch];
