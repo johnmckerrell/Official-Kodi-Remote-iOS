@@ -2861,7 +2861,9 @@ int originYear = 0;
 //				[self.filteredListContent addObject:item];
 //            }
         
-        NSRange range = [[NSString stringWithFormat:@"%@",[item objectForKey:@"label"]] rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        NSString *content = [NSString stringWithFormat:@"%@----%@", item[@"label"], item[@"plot"]];
+        
+        NSRange range = [[NSString stringWithFormat:@"%@",content] rangeOfString:searchText options:NSCaseInsensitiveSearch];
         if (range.location != NSNotFound) {
             [self.filteredListContent addObject:item];
         }
